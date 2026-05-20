@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hearth & Cents — Your Family's Financial Home</title>
+<meta name="description" content="Budget, meals, shopping, and to-dos — all in one private space built for how families actually live. Join the founding 20 households.">
+<meta property="og:title" content="Hearth & Cents — Your Family's Financial Home">
+<meta property="og:description" content="One place for your household budget, meal planning, and shopping lists. Built for families. Private by design.">
+<meta property="og:url" content="https://hearthandcents.com">
+<style>
+/* ─── RESET ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ─── BRAND TOKENS ───────────────────────────────────────── */
+:root {
+  --hc-ember-gold:   #EF9F27;
+  --hc-penny-light:  #FAC775;
+  --hc-hearth-red:   #D85A30;
+  --hc-warm-cream:   #FAEEDA;
+  --hc-linen:        #F1EFE8;
+  --hc-charcoal:     #2C2C2A;
+  --hc-ash:          #888780;
+  --hc-muted:        #B5B3AA;
+  --hc-ochre-deep:   #854F0B;
+  --hc-ochre-mid:    #BA7517;
+  --hc-border:       rgba(44,44,42,0.12);
+  --hc-border-light: rgba(44,44,42,0.07);
+  --hc-success:      #3B6D11;
+  --hc-sage:         #6B8F5E;
+  --hc-slate:        #5B7FA6;
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+/* ─── BASE ───────────────────────────────────────────────── */
+body {
+  font-family: var(--sans);
+  background: var(--hc-warm-cream);
+  color: var(--hc-charcoal);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── GRAIN ──────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: .35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+}
+
+/* ─── NAV ────────────────────────────────────────────────── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6%;
+  height: 68px;
+  background: var(--hc-charcoal);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  text-decoration: none;
+  user-select: none;
+}
+.logo-hearth {
+  font-family: var(--serif);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250,238,218,0.65);
+}
+.logo-amp {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--hc-penny-light);
+  line-height: 1.1;
+}
+.logo-cents {
+  font-family: var(--serif);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250,238,218,0.65);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  color: rgba(250,238,218,0.5);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color .18s;
+}
+.nav-links a:hover { color: var(--hc-warm-cream); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-nav-ghost {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: rgba(250,238,218,0.55);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all .18s;
+}
+.btn-nav-ghost:hover { color: var(--hc-warm-cream); background: rgba(255,255,255,0.07); }
+.btn-nav-pill {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hc-charcoal);
+  background: var(--hc-ember-gold);
+  border: none;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all .18s;
+}
+.btn-nav-pill:hover { background: var(--hc-penny-light); }
+
+/* ─── HERO ───────────────────────────────────────────────── */
+.hero-wrap {
+  background: var(--hc-warm-cream);
+  border-bottom: 1px solid var(--hc-border);
+}
+.hero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 80px 6% 72px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hc-ochre-deep);
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--hc-ember-gold);
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5.5vw, 62px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--hc-charcoal);
+  margin-bottom: 24px;
+}
+h1 em {
+  font-style: italic;
+  color: var(--hc-ochre-deep);
+}
+
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--hc-ash);
+  margin-bottom: 40px;
+  max-width: 440px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.btn-hero {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--hc-charcoal);
+  background: var(--hc-ember-gold);
+  border: none;
+  cursor: pointer;
+  padding: 13px 26px;
+  border-radius: 24px;
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-hero:hover { background: var(--hc-penny-light); transform: translateY(-1px); }
+
+.btn-hero-outline {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--hc-charcoal);
+  background: none;
+  border: 1px solid var(--hc-border);
+  cursor: pointer;
+  padding: 12px 26px;
+  border-radius: 24px;
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-hero-outline:hover { border-color: rgba(44,44,42,0.28); }
+
+.founding-nudge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--hc-ochre-mid);
+}
+.founding-nudge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hc-ember-gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .5; transform: scale(.8); }
+}
+
+/* ─── APP PREVIEW ────────────────────────────────────────── */
+.app-preview {
+  border-radius: 12px;
+  border: 1px solid rgba(44,44,42,0.14);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(44,44,42,0.12), 0 4px 16px rgba(44,44,42,0.06);
+}
+.app-preview svg { display: block; width: 100%; }
+
+/* ─── SECTION SHARED ─────────────────────────────────────── */
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hc-ochre-deep);
+  margin-bottom: 14px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--hc-charcoal);
+}
+.section-sub {
+  font-size: 16px;
+  color: var(--hc-ash);
+  margin-top: 14px;
+  line-height: 1.68;
+}
+
+/* ─── FEATURES ───────────────────────────────────────────── */
+.features-wrap {
+  background: #fff;
+  border-top: 1px solid var(--hc-border);
+  border-bottom: 1px solid var(--hc-border);
+  padding: 88px 6%;
+}
+.features-header {
+  text-align: center;
+  max-width: 520px;
+  margin: 0 auto 64px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  background: var(--hc-border);
+  border: 1px solid var(--hc-border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.feature-card {
+  background: #fff;
+  padding: 36px 32px;
+  transition: background .2s;
+}
+.feature-card:hover { background: var(--hc-linen); }
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(239,159,39,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  font-size: 18px;
+}
+.feature-name {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--hc-charcoal);
+  margin-bottom: 8px;
+}
+.feature-desc {
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--hc-ash);
+}
+
+/* ─── HOW IT WORKS ───────────────────────────────────────── */
+.how-wrap { padding: 88px 6%; }
+.how-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+}
+.how-step {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--hc-border);
+  cursor: pointer;
+}
+.how-step:first-child { border-top: 1px solid var(--hc-border); }
+.how-num {
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--hc-muted);
+  min-width: 22px;
+  padding-top: 3px;
+  transition: color .2s;
+}
+.how-step.active .how-num { color: var(--hc-ember-gold); }
+.how-step-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--hc-charcoal);
+  margin-bottom: 5px;
+}
+.how-step-text {
+  font-size: 13px;
+  line-height: 1.68;
+  color: var(--hc-ash);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .38s ease;
+}
+.how-step.active .how-step-text { max-height: 120px; }
+
+.how-visual {
+  background: var(--hc-linen);
+  border-radius: 12px;
+  border: 1px solid var(--hc-border);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  position: sticky;
+  top: 88px;
+}
+.how-visual svg { width: 100%; height: 100%; }
+
+/* ─── PRICING ────────────────────────────────────────────── */
+.pricing-wrap {
+  background: var(--hc-charcoal);
+  padding: 88px 6%;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.pricing-header {
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto 52px;
+}
+.pricing-header .section-label { color: var(--hc-penny-light); }
+.pricing-header .section-title { color: var(--hc-warm-cream); }
+.pricing-header .section-sub   { color: rgba(250,238,218,0.45); }
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 14px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.pricing-card {
+  border-radius: 12px;
+  padding: 32px 28px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+.pricing-card.featured {
+  background: var(--hc-warm-cream);
+  border-color: var(--hc-warm-cream);
+}
+
+.p-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+.p-badge-founding { background: rgba(239,159,39,0.15); color: var(--hc-penny-light); }
+.p-badge-best     { background: var(--hc-ember-gold);  color: var(--hc-charcoal); }
+.p-badge-flex     { background: rgba(255,255,255,0.07); color: rgba(250,238,218,0.45); }
+
+.p-plan {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,238,218,0.35);
+  margin-bottom: 10px;
+}
+.pricing-card.featured .p-plan { color: var(--hc-ash); }
+
+.p-price {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--hc-warm-cream);
+}
+.pricing-card.featured .p-price { color: var(--hc-charcoal); }
+.p-freq {
+  font-size: 13px;
+  color: rgba(250,238,218,0.35);
+  margin-left: 2px;
+}
+.pricing-card.featured .p-freq { color: var(--hc-ash); }
+
+.p-equiv {
+  font-size: 12px;
+  color: rgba(250,238,218,0.3);
+  margin-top: 3px;
+  min-height: 18px;
+}
+.pricing-card.featured .p-equiv { color: var(--hc-ochre-mid); font-weight: 500; }
+
+.p-savings {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--hc-success);
+  background: rgba(59,109,17,0.1);
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin: 10px 0 16px;
+}
+
+.p-desc {
+  font-size: 13px;
+  color: rgba(250,238,218,0.48);
+  line-height: 1.62;
+  margin-bottom: 24px;
+  min-height: 56px;
+}
+.pricing-card.featured .p-desc { color: var(--hc-ash); }
+
+.p-features {
+  list-style: none;
+  margin-bottom: 28px;
+}
+.p-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(250,238,218,0.62);
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.p-feature:last-child { border-bottom: none; }
+.pricing-card.featured .p-feature { color: var(--hc-charcoal); border-color: var(--hc-border); }
+.p-check-gold  { color: var(--hc-ember-gold); flex-shrink: 0; }
+.p-check-green { color: var(--hc-success);    flex-shrink: 0; }
+
+.btn-pricing {
+  display: block;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  padding: 13px;
+  border-radius: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: none;
+  color: rgba(250,238,218,0.6);
+}
+.btn-pricing:hover { border-color: rgba(255,255,255,0.28); color: var(--hc-warm-cream); }
+.btn-pricing-primary {
+  background: var(--hc-ember-gold);
+  border-color: var(--hc-ember-gold);
+  color: var(--hc-charcoal);
+}
+.btn-pricing-primary:hover { background: var(--hc-penny-light); border-color: var(--hc-penny-light); color: var(--hc-charcoal); }
+.btn-pricing-dark {
+  border-color: var(--hc-border);
+  background: none;
+  color: var(--hc-ash);
+}
+.btn-pricing-dark:hover { border-color: rgba(44,44,42,0.28); color: var(--hc-charcoal); }
+
+.pricing-footnote {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(250,238,218,0.22);
+  margin-top: 28px;
+  line-height: 1.7;
+}
+.pricing-footnote a { color: rgba(250,238,218,0.38); text-decoration: none; }
+.pricing-footnote a:hover { color: rgba(250,238,218,0.65); }
+
+/* ─── ACCESS / FORM ──────────────────────────────────────── */
+.access-wrap { padding: 88px 6%; }
+.access-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+}
+.access-step {
+  display: flex;
+  gap: 18px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--hc-border);
+}
+.access-step:first-child { border-top: 1px solid var(--hc-border); }
+.access-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--hc-ember-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--hc-ochre-deep);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.access-step-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--hc-charcoal);
+  margin-bottom: 4px;
+}
+.access-step-desc { font-size: 13px; color: var(--hc-ash); line-height: 1.62; }
+
+/* Tally embed container */
+.form-panel {
+  background: #fff;
+  border: 1px solid var(--hc-border);
+  border-radius: 12px;
+  padding: 40px;
+  min-height: 400px;
+}
+.form-panel-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--hc-charcoal);
+  margin-bottom: 6px;
+}
+.form-panel-sub {
+  font-size: 13px;
+  color: var(--hc-ash);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+
+
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer {
+  background: var(--hc-charcoal);
+  padding: 52px 6% 36px;
+}
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 28px;
+}
+.footer-logo-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.footer-logo-hearth,
+.footer-logo-cents {
+  font-family: var(--serif);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250,238,218,0.4);
+}
+.footer-logo-amp {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--hc-penny-light);
+  line-height: 1.2;
+}
+.footer-tagline {
+  font-size: 12px;
+  color: rgba(250,238,218,0.25);
+}
+.footer-links { display: flex; gap: 44px; }
+.footer-link-group-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,238,218,0.28);
+  margin-bottom: 14px;
+}
+.footer-link-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-link-list a {
+  font-size: 13px;
+  color: rgba(250,238,218,0.48);
+  text-decoration: none;
+  transition: color .18s;
+}
+.footer-link-list a:hover { color: var(--hc-warm-cream); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy { font-size: 12px; color: rgba(250,238,218,0.18); }
+.btn-footer-login {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hc-charcoal);
+  background: var(--hc-ember-gold);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  text-decoration: none;
+  transition: all .18s;
+}
+.btn-footer-login:hover { background: var(--hc-penny-light); }
+
+/* ─── SCROLL REVEAL ──────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero            { grid-template-columns: 1fr; }
+  .app-preview     { display: none; }
+  .features-grid   { grid-template-columns: 1fr 1fr; }
+  .how-inner       { grid-template-columns: 1fr; }
+  .how-visual      { display: none; }
+  .pricing-cards   { grid-template-columns: 1fr; max-width: 420px; }
+  .access-inner    { grid-template-columns: 1fr; }
+  .footer-top      { flex-direction: column; gap: 28px; }
+  .footer-bottom   { flex-direction: column; gap: 14px; text-align: center; }
+}
+@media (max-width: 600px) {
+  .features-grid   { grid-template-columns: 1fr; }
+  .nav-links       { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ────────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="logo">
+    <span class="logo-hearth">Hearth</span>
+    <span class="logo-amp">&</span>
+    <span class="logo-cents">Cents</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="https://app.hearthandcents.com/login" class="btn-nav-ghost">Sign in</a>
+    <a href="#request-access" class="btn-nav-pill">Request access</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────────────────────────── -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Household management</div>
+      <h1>Your family,<br><em>beautifully</em><br>organized.</h1>
+      <p class="hero-sub">Budget, meals, shopping, and to-dos — all in one private space built for how families actually live. No spreadsheets. No switching apps. One place that knows your household.</p>
+      <div class="hero-actions">
+        <a href="#request-access" class="btn-hero">Request early access</a>
+        <a href="#how-it-works" class="btn-hero-outline">See how it works</a>
+      </div>
+      <div class="founding-nudge">
+        <span class="founding-nudge-dot"></span>
+        Accepting founding households now — 20 spots total
+      </div>
+    </div>
+
+    <!-- App preview — Meals tab, scrubbed data -->
+    <div class="app-preview">
+      <svg viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Frame bg -->
+        <rect width="500" height="400" fill="#F1EFE8"/>
+        <!-- Nav bar -->
+        <rect width="500" height="52" fill="#2C2C2A"/>
+        <!-- Logo -->
+        <text x="22" y="21" font-family="Georgia,serif" font-size="8" fill="rgba(250,238,218,0.5)" letter-spacing="1.5">HEARTH</text>
+        <text x="26" y="34" font-family="Georgia,serif" font-size="16" fill="#FAC775">&amp;</text>
+        <text x="22" y="47" font-family="Georgia,serif" font-size="8" fill="rgba(250,238,218,0.5)" letter-spacing="1.5">CENTS</text>
+        <!-- Nav items -->
+        <text x="90" y="31" font-family="Arial,sans-serif" font-size="10" fill="rgba(250,238,218,0.38)">Dashboard</text>
+        <text x="168" y="31" font-family="Arial,sans-serif" font-size="10" fill="rgba(250,238,218,0.38)">Budget</text>
+        <text x="228" y="31" font-family="Arial,sans-serif" font-size="10" fill="rgba(250,238,218,0.38)">To-Do</text>
+        <!-- Meals active pill -->
+        <rect x="271" y="17" width="44" height="20" rx="10" fill="#EF9F27"/>
+        <text x="293" y="31" font-family="Arial,sans-serif" font-size="10" fill="#2C2C2A" text-anchor="middle" font-weight="600">Meals</text>
+        <text x="328" y="31" font-family="Arial,sans-serif" font-size="10" fill="rgba(250,238,218,0.38)">Shopping</text>
+
+        <!-- Sub-nav -->
+        <rect x="20" y="62" width="92" height="22" rx="11" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+        <text x="66" y="77" font-family="Arial,sans-serif" font-size="9" fill="#2C2C2A" text-anchor="middle" font-weight="500">Weekly Plan</text>
+        <text x="155" y="77" font-family="Arial,sans-serif" font-size="9" fill="#888780" text-anchor="middle">Favorite Meals</text>
+
+        <!-- Week heading -->
+        <text x="250" y="106" font-family="Georgia,serif" font-size="11" fill="#2C2C2A" text-anchor="middle">Week of May 25, 2026</text>
+        <text x="250" y="120" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">3 of 7 dinners planned · drag meals to rearrange</text>
+
+        <!-- Send to shopping btn -->
+        <rect x="372" y="60" width="112" height="22" rx="5" fill="#2C2C2A"/>
+        <text x="428" y="74" font-family="Arial,sans-serif" font-size="8" fill="#FAEEDA" text-anchor="middle">↗ Send to shopping list</text>
+
+        <!-- Day cards -->
+        <!-- SUN open -->
+        <rect x="20" y="132" width="66" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="30" cy="143" r="3" fill="#888780"/>
+        <text x="40" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">SUN</text>
+        <text x="40" y="157" font-family="Arial,sans-serif" font-size="7" fill="#B5B3AA">May 25</text>
+        <rect x="28" y="162" width="50" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <text x="53" y="183" font-family="Arial,sans-serif" font-size="8" fill="#D3D1C7" text-anchor="middle">+ Add dinner</text>
+        <text x="53" y="202" font-family="Arial,sans-serif" font-size="7" fill="#D3D1C7" text-anchor="middle">OPEN</text>
+
+        <!-- MON meal -->
+        <rect x="94" y="132" width="66" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="104" cy="143" r="3" fill="#EF9F27"/>
+        <text x="114" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">MON</text>
+        <text x="114" y="157" font-family="Arial,sans-serif" font-size="7" fill="#B5B3AA">May 26</text>
+        <rect x="102" y="162" width="50" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <rect x="102" y="168" width="50" height="34" rx="5" fill="#FAEEDA"/>
+        <text x="127" y="183" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Sheet Pan</text>
+        <text x="127" y="194" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Chicken</text>
+        <text x="127" y="205" font-family="Arial,sans-serif" font-size="6.5" fill="#BA7517" text-anchor="middle">25 min</text>
+
+        <!-- TUE meal -->
+        <rect x="168" y="132" width="66" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="178" cy="143" r="3" fill="#EF9F27"/>
+        <text x="188" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">TUE</text>
+        <text x="188" y="157" font-family="Arial,sans-serif" font-size="7" fill="#B5B3AA">May 27</text>
+        <rect x="176" y="162" width="50" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <rect x="176" y="168" width="50" height="34" rx="5" fill="#F1EFE8"/>
+        <text x="201" y="183" font-family="Arial,sans-serif" font-size="7.5" fill="#2C2C2A" text-anchor="middle">Thai Basil</text>
+        <text x="201" y="194" font-family="Arial,sans-serif" font-size="7.5" fill="#2C2C2A" text-anchor="middle">Stir Fry</text>
+        <text x="201" y="205" font-family="Arial,sans-serif" font-size="6.5" fill="#888780" text-anchor="middle">20 min</text>
+
+        <!-- WED open/busy -->
+        <rect x="242" y="132" width="66" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="252" cy="143" r="3" fill="#EF9F27"/>
+        <text x="262" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">WED</text>
+        <text x="262" y="157" font-family="Arial,sans-serif" font-size="7" fill="#B5B3AA">May 28</text>
+        <rect x="250" y="162" width="50" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <text x="275" y="183" font-family="Arial,sans-serif" font-size="8" fill="#D3D1C7" text-anchor="middle">+ Add dinner</text>
+        <text x="275" y="202" font-family="Arial,sans-serif" font-size="7" fill="#D3D1C7" text-anchor="middle">BUSY</text>
+
+        <!-- THU meal -->
+        <rect x="316" y="132" width="66" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="326" cy="143" r="3" fill="#888780"/>
+        <text x="336" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">THU</text>
+        <text x="336" y="157" font-family="Arial,sans-serif" font-size="7" fill="#B5B3AA">May 29</text>
+        <rect x="324" y="162" width="50" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <rect x="324" y="168" width="50" height="34" rx="5" fill="#FAEEDA"/>
+        <text x="349" y="183" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Lemon Herb</text>
+        <text x="349" y="194" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Salmon</text>
+        <text x="349" y="205" font-family="Arial,sans-serif" font-size="6.5" fill="#BA7517" text-anchor="middle">28 min</text>
+
+        <!-- FRI–SAT span -->
+        <rect x="390" y="132" width="92" height="78" rx="8" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <circle cx="400" cy="143" r="3" fill="#888780"/>
+        <text x="410" y="146" font-family="Arial,sans-serif" font-size="8" fill="#888780">FRI – SAT</text>
+        <rect x="398" y="162" width="76" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <text x="436" y="185" font-family="Arial,sans-serif" font-size="8" fill="#D3D1C7" text-anchor="middle">Weekend flex</text>
+
+        <!-- Idea pool section -->
+        <rect x="0" y="222" width="500" height="14" fill="rgba(44,44,42,0.03)"/>
+        <text x="20" y="250" font-family="Arial,sans-serif" font-size="8" fill="#888780" font-weight="500">IDEA POOL · 5 suggestions</text>
+        <!-- chips -->
+        <rect x="20" y="257" width="84" height="24" rx="5" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <text x="62" y="273" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">Black Bean Tacos</text>
+        <rect x="112" y="257" width="80" height="24" rx="5" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <text x="152" y="273" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">Veggie Fried Rice</text>
+        <rect x="200" y="257" width="76" height="24" rx="5" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <text x="238" y="273" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">GF Pasta Bake</text>
+        <rect x="284" y="257" width="76" height="24" rx="5" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <text x="322" y="273" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">Chicken Fajitas</text>
+        <rect x="368" y="257" width="68" height="24" rx="5" fill="#fff" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+        <text x="402" y="273" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">Rice Bowls</text>
+
+        <!-- Action buttons -->
+        <rect x="20" y="292" width="110" height="22" rx="6" fill="#2C2C2A"/>
+        <text x="75" y="307" font-family="Arial,sans-serif" font-size="8" fill="#FAEEDA" text-anchor="middle">✦ Generate ideas</text>
+        <rect x="138" y="292" width="104" height="22" rx="6" fill="rgba(44,44,42,0.07)"/>
+        <text x="190" y="307" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">Add from favorites</text>
+        <rect x="250" y="292" width="80" height="22" rx="6" fill="rgba(44,44,42,0.07)"/>
+        <text x="290" y="307" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">+ Add a meal</text>
+
+        <!-- Dietary badge -->
+        <rect x="20" y="326" width="232" height="18" rx="4" fill="rgba(59,109,17,0.08)" stroke="rgba(59,109,17,0.18)" stroke-width=".5"/>
+        <text x="30" y="338" font-family="Arial,sans-serif" font-size="7.5" fill="#3B6D11">✓ Gluten-free · dairy-free · kid-friendly · under 30 min</text>
+
+        <!-- Bottom bar -->
+        <rect x="0" y="376" width="500" height="24" fill="rgba(44,44,42,0.03)"/>
+        <rect x="0" y="376" width="500" height=".5" fill="rgba(44,44,42,0.07)"/>
+        <text x="20" y="392" font-family="Arial,sans-serif" font-size="8" fill="#888780">Hearth &amp; Cents · Sample Household · Private</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FEATURES ─────────────────────────────────────────────────────── -->
+<section class="features-wrap" id="features">
+  <div class="features-header reveal">
+    <p class="section-label">What's inside</p>
+    <h2 class="section-title">Everything your household needs, nothing it doesn't.</h2>
+    <p class="section-sub">Five modules that talk to each other — designed around how families actually plan, spend, and live.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">💰</div>
+      <h3 class="feature-name">Budget &amp; Cashflow</h3>
+      <p class="feature-desc">Envelope-style spending categories, automatic bank transaction sync via email, and a visual cashflow map showing exactly where your money goes — income in, savings and transfers out, discretionary spend at a glance.</p>
+    </div>
+    <div class="feature-card reveal reveal-d1">
+      <div class="feature-icon">🍽️</div>
+      <h3 class="feature-name">Meal Planning</h3>
+      <p class="feature-desc">AI-generated weekly dinner plans built around your household's dietary restrictions, preferred stores, and 30-minute prep limit. One tap for a full week. Swap any night from an alternatives bench without another AI call.</p>
+    </div>
+    <div class="feature-card reveal reveal-d2">
+      <div class="feature-icon">🛒</div>
+      <h3 class="feature-name">Smart Shopping</h3>
+      <p class="feature-desc">Ingredients flow straight from your meal plan into per-store shopping lists. King Soopers, Walmart, Costco, Whole Foods — each list routes to the right store. Open pickup directly from the app.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">✅</div>
+      <h3 class="feature-name">Household To-Dos</h3>
+      <p class="feature-desc">A shared task board for everything that doesn't fit anywhere else. Assign to a person, set priority, and track what's open — without switching to yet another app.</p>
+    </div>
+    <div class="feature-card reveal reveal-d1">
+      <div class="feature-icon">🔧</div>
+      <h3 class="feature-name">Maintenance Tracking</h3>
+      <p class="feature-desc">Recurring household tasks — oil changes, cleaning schedules, service appointments — tracked automatically, surfaced when due, and dismissed when done.</p>
+    </div>
+    <div class="feature-card reveal reveal-d2">
+      <div class="feature-icon">🔒</div>
+      <h3 class="feature-name">Private by Design</h3>
+      <p class="feature-desc">Google sign-in, secure sessions, and a privacy mode that blurs financial figures on screen. Your household's data stays yours. No advertising. No data mining. No surprises.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─────────────────────────────────────────────────── -->
+<section class="how-wrap" id="how-it-works">
+  <div class="how-inner">
+    <div>
+      <p class="section-label reveal">How it works</p>
+      <h2 class="section-title reveal" style="margin-bottom:36px;">From bank email to dinner table in minutes.</h2>
+      <div>
+        <div class="how-step active" onclick="setStep(0)">
+          <span class="how-num">01</span>
+          <div>
+            <div class="how-step-title">Connect your bank email</div>
+            <p class="how-step-text">Link your Gmail and we watch for transaction emails from your bank. Purchases are parsed, categorized automatically, and appear in your budget — no manual entry, no CSV imports, no third-party bank credentials.</p>
+          </div>
+        </div>
+        <div class="how-step" onclick="setStep(1)">
+          <span class="how-num">02</span>
+          <div>
+            <div class="how-step-title">Generate your week of meals</div>
+            <p class="how-step-text">Tell us your dietary needs, preferred stores, and time constraints once. Every week, one tap generates a full dinner plan tailored to your household. Swap any meal from the idea bench, or drag dinners between days.</p>
+          </div>
+        </div>
+        <div class="how-step" onclick="setStep(2)">
+          <span class="how-num">03</span>
+          <div>
+            <div class="how-step-title">Build your shopping carts</div>
+            <p class="how-step-text">Ingredients sort by store automatically. Check off what you already have, add anything extra, then open pickup directly from the app. Separate, clean lists for every store you use.</p>
+          </div>
+        </div>
+        <div class="how-step" onclick="setStep(3)">
+          <span class="how-num">04</span>
+          <div>
+            <div class="how-step-title">Watch the picture form</div>
+            <p class="how-step-text">Spending flows into your budget, your cashflow map updates, maintenance gets tracked. The whole household runs a little more smoothly each week — without extra effort from you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="how-visual reveal">
+      <svg id="how-svg" viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding:20px;">
+        <!-- Step 0 -->
+        <g id="sv0">
+          <rect x="40" y="10" width="240" height="52" rx="8" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="160" y="30" font-family="Arial,sans-serif" font-size="9" fill="#888780" text-anchor="middle">Email Connect</text>
+          <rect x="56" y="38" width="96" height="16" rx="4" fill="#FAEEDA"/>
+          <text x="104" y="49" font-family="Arial,sans-serif" font-size="8" fill="#854F0B" text-anchor="middle">✉ Gmail connected</text>
+          <rect x="164" y="38" width="100" height="16" rx="4" fill="#F1EFE8"/>
+          <text x="214" y="49" font-family="Arial,sans-serif" font-size="8" fill="#888780" text-anchor="middle">+ Add account</text>
+          <path d="M160 70 L160 92" stroke="rgba(44,44,42,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+          <rect x="40" y="92" width="240" height="82" rx="8" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="56" y="110" font-family="Arial,sans-serif" font-size="9" fill="#888780">Recent transactions</text>
+          <text x="56" y="130" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">Grocery store · $89.50</text>
+          <text x="238" y="130" font-family="Arial,sans-serif" font-size="7" fill="#3B6D11" text-anchor="end">Food &amp; Groceries ✓</text>
+          <text x="56" y="148" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">Gas station · $54.00</text>
+          <text x="238" y="148" font-family="Arial,sans-serif" font-size="7" fill="#3B6D11" text-anchor="end">Transportation ✓</text>
+          <text x="56" y="166" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">Coffee shop · $12.75</text>
+          <text x="238" y="166" font-family="Arial,sans-serif" font-size="7" fill="#3B6D11" text-anchor="end">Dining &amp; Takeout ✓</text>
+        </g>
+        <!-- Step 1 -->
+        <g id="sv1" style="display:none">
+          <rect x="16" y="10" width="64" height="72" rx="7" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="48" y="25" font-family="Arial,sans-serif" font-size="7" fill="#888780" text-anchor="middle">MON</text>
+          <rect x="24" y="30" width="48" height="44" rx="5" fill="#FAEEDA"/>
+          <text x="48" y="50" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Sheet Pan</text>
+          <text x="48" y="62" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Chicken</text>
+          <rect x="88" y="10" width="64" height="72" rx="7" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="120" y="25" font-family="Arial,sans-serif" font-size="7" fill="#888780" text-anchor="middle">TUE</text>
+          <rect x="96" y="30" width="48" height="44" rx="5" fill="#F1EFE8"/>
+          <text x="120" y="50" font-family="Arial,sans-serif" font-size="7.5" fill="#2C2C2A" text-anchor="middle">Thai Basil</text>
+          <text x="120" y="62" font-family="Arial,sans-serif" font-size="7.5" fill="#2C2C2A" text-anchor="middle">Stir Fry</text>
+          <rect x="160" y="10" width="64" height="72" rx="7" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="192" y="25" font-family="Arial,sans-serif" font-size="7" fill="#888780" text-anchor="middle">WED</text>
+          <rect x="168" y="30" width="48" height="44" rx="5" fill="#FAEEDA"/>
+          <text x="192" y="50" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">GF Pasta</text>
+          <text x="192" y="62" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Primavera</text>
+          <rect x="232" y="10" width="72" height="72" rx="7" fill="#fff" stroke="rgba(44,44,42,0.1)" stroke-width=".5"/>
+          <text x="268" y="25" font-family="Arial,sans-serif" font-size="7" fill="#888780" text-anchor="middle">THU +</text>
+          <text x="268" y="55" font-family="Arial,sans-serif" font-size="8" fill="#D3D1C7" text-anchor="middle">+ Add</text>
+          <rect x="16" y="96" width="288" height="18" rx="5" fill="rgba(59,109,17,0.08)" stroke="rgba(59,109,17,0.18)" stroke-width=".5"/>
+          <text x="26" y="108" font-family="Arial,sans-serif" font-size="7.5" fill="#3B6D11">✓ Gluten-free · dairy-free · under 30 min · kid-friendly</text>
+          <text x="16" y="134" font-family="Arial,sans-serif" font-size="8" fill="#888780">Idea pool · 5 suggestions</text>
+          <rect x="16" y="142" width="82" height="22" rx="4" fill="#F1EFE8"/>
+          <text x="57" y="156" font-family="Arial,sans-serif" font-size="7.5" fill="#888780" text-anchor="middle">Black Bean Tacos</text>
+          <rect x="106" y="142" width="78" height="22" rx="4" fill="#F1EFE8"/>
+          <text x="145" y="156" font-family="Arial,sans-serif" font-size="7.5" fill="#888780" text-anchor="middle">Veggie Fried Rice</text>
+          <rect x="192" y="142" width="72" height="22" rx="4" fill="#F1EFE8"/>
+          <text x="228" y="156" font-family="Arial,sans-serif" font-size="7.5" fill="#888780" text-anchor="middle">Chicken Bowl</text>
+        </g>
+        <!-- Step 2 -->
+        <g id="sv2" style="display:none">
+          <rect x="16" y="10" width="136" height="120" rx="8" fill="#fff" stroke="rgba(107,143,94,0.35)" stroke-width="1.5"/>
+          <circle cx="28" cy="26" r="5" fill="#6B8F5E"/>
+          <text x="38" y="29" font-family="Arial,sans-serif" font-size="9" fill="#2C2C2A" font-weight="500">King Soopers</text>
+          <text x="26" y="48" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☐ Ground beef · 1.5 lbs</text>
+          <text x="26" y="64" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☐ Corn tortillas · 18ct</text>
+          <text x="26" y="80" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☑ Baby spinach</text>
+          <text x="26" y="96" font-family="Arial,sans-serif" font-size="8" fill="#B5B3AA">☐ Avocados · 3</text>
+          <rect x="24" y="106" width="82" height="16" rx="4" fill="#F1EFE8" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+          <text x="65" y="117" font-family="Arial,sans-serif" font-size="7.5" fill="#888780" text-anchor="middle">Open pickup →</text>
+          <rect x="168" y="10" width="136" height="120" rx="8" fill="#fff" stroke="rgba(239,159,39,0.3)" stroke-width="1.5"/>
+          <circle cx="180" cy="26" r="5" fill="#EF9F27"/>
+          <text x="190" y="29" font-family="Arial,sans-serif" font-size="9" fill="#2C2C2A" font-weight="500">Walmart</text>
+          <text x="178" y="48" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☐ Paper towels · 2 rolls</text>
+          <text x="178" y="64" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☐ GF breadcrumbs</text>
+          <text x="178" y="80" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">☐ Rice · 2 lbs</text>
+          <rect x="176" y="106" width="82" height="16" rx="4" fill="#F1EFE8" stroke="rgba(44,44,42,0.08)" stroke-width=".5"/>
+          <text x="217" y="117" font-family="Arial,sans-serif" font-size="7.5" fill="#888780" text-anchor="middle">Open pickup →</text>
+          <rect x="16" y="146" width="288" height="18" rx="5" fill="#FAEEDA" stroke="rgba(186,117,23,0.2)" stroke-width=".5"/>
+          <text x="26" y="158" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B">✓ Pantry check done · 4 items at home · 14 to buy</text>
+        </g>
+        <!-- Step 3 -->
+        <g id="sv3" style="display:none">
+          <text x="16" y="22" font-family="Arial,sans-serif" font-size="8" fill="#888780">May cashflow</text>
+          <rect x="16" y="28" width="58" height="30" rx="6" fill="#FAEEDA"/>
+          <text x="45" y="47" font-family="Arial,sans-serif" font-size="8" fill="#854F0B" text-anchor="middle">Income</text>
+          <rect x="126" y="28" width="62" height="30" rx="6" fill="#2C2C2A"/>
+          <text x="157" y="47" font-family="Arial,sans-serif" font-size="8" fill="#FAEEDA" text-anchor="middle">Checking</text>
+          <path d="M74 43 L126 43" stroke="#EF9F27" stroke-width="1.5"/>
+          <path d="M188 43 Q216 43 216 72" stroke="rgba(59,109,17,.5)" stroke-width="1"/>
+          <path d="M188 43 Q216 43 216 104" stroke="rgba(59,109,17,.4)" stroke-width="1"/>
+          <path d="M188 43 Q216 43 216 136" stroke="rgba(239,159,39,.6)" stroke-width="1"/>
+          <rect x="224" y="58" width="80" height="22" rx="5" fill="#F1EFE8" stroke="rgba(59,109,17,.2)" stroke-width=".5"/>
+          <text x="264" y="72" font-family="Arial,sans-serif" font-size="7.5" fill="#3B6D11" text-anchor="middle">House Savings</text>
+          <rect x="224" y="90" width="80" height="22" rx="5" fill="#F1EFE8" stroke="rgba(59,109,17,.2)" stroke-width=".5"/>
+          <text x="264" y="104" font-family="Arial,sans-serif" font-size="7.5" fill="#3B6D11" text-anchor="middle">Travel Fund</text>
+          <rect x="224" y="122" width="80" height="22" rx="5" fill="#FAEEDA" stroke="rgba(186,117,23,.2)" stroke-width=".5"/>
+          <text x="264" y="136" font-family="Arial,sans-serif" font-size="7.5" fill="#854F0B" text-anchor="middle">Discretionary</text>
+          <rect x="16" y="168" width="288" height="72" rx="8" fill="#fff" stroke="rgba(44,44,42,.1)" stroke-width=".5"/>
+          <text x="30" y="186" font-family="Arial,sans-serif" font-size="8" fill="#888780">Spending this month</text>
+          <text x="30" y="204" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">Food &amp; Groceries</text>
+          <rect x="30" y="210" width="170" height="3" rx="1.5" fill="#F1EFE8"/>
+          <rect x="30" y="210" width="96" height="3" rx="1.5" fill="#EF9F27"/>
+          <text x="210" y="214" font-family="Arial,sans-serif" font-size="7" fill="#888780">$480 / $800</text>
+          <text x="30" y="228" font-family="Arial,sans-serif" font-size="8" fill="#2C2C2A">Dining &amp; Takeout</text>
+          <rect x="30" y="234" width="170" height="3" rx="1.5" fill="#F1EFE8"/>
+          <rect x="30" y="234" width="56" height="3" rx="1.5" fill="#BA7517"/>
+          <text x="210" y="238" font-family="Arial,sans-serif" font-size="7" fill="#888780">$140 / $300</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOUNDING ACCESS ──────────────────────────────────────────────── -->
+<section class="pricing-wrap" id="pricing">
+  <div class="pricing-header reveal">
+    <p class="section-label">Early access</p>
+    <h2 class="section-title">Built for families who want to run a tighter ship.</h2>
+    <p class="section-sub">Hearth &amp; Cents is currently in private beta. We're hand-selecting a small group of founding households to help shape the product before public launch.</p>
+  </div>
+
+  <div style="max-width:620px;margin:0 auto;">
+    <div class="pricing-card featured reveal" style="text-align:center;padding:48px 44px;">
+      <span class="p-badge p-badge-best" style="margin-bottom:24px;">Founding access</span>
+      <div class="p-plan" style="margin-bottom:16px;">Private beta · 20 households</div>
+
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;margin-bottom:6px;">
+        <span class="p-price">Free</span>
+      </div>
+      <div class="p-equiv" style="text-align:center;margin-bottom:28px;">for the duration of the beta</div>
+
+      <p class="p-desc" style="max-width:420px;margin:0 auto 32px;text-align:center;">
+        Founding households get full access at no cost while we build. You'll get every feature — budget, meals, shopping, to-dos, maintenance — and a direct line to us as we shape the product together.
+      </p>
+
+      <ul class="p-features" style="max-width:340px;margin:0 auto 36px;text-align:left;">
+        <li class="p-feature"><span class="p-check-green">✓</span>All modules, fully unlocked</li>
+        <li class="p-feature"><span class="p-check-green">✓</span>Unlimited household members</li>
+        <li class="p-feature"><span class="p-check-green">✓</span>AI meal planning</li>
+        <li class="p-feature"><span class="p-check-green">✓</span>Bank email sync</li>
+        <li class="p-feature"><span class="p-check-green">✓</span>Direct line to the founders</li>
+        <li class="p-feature"><span class="p-check-green">✓</span>Shape the roadmap</li>
+      </ul>
+
+      <a href="#request-access" class="btn-pricing btn-pricing-primary" style="max-width:280px;margin:0 auto;display:block;">Request founding access →</a>
+    </div>
+  </div>
+
+  <p class="pricing-footnote" style="margin-top:24px;">
+    No credit card required. No commitments.<br>
+    Questions? <a href="mailto:hello@hearthandcents.com">hello@hearthandcents.com</a>
+  </p>
+</section>
+
+<!-- ─── REQUEST ACCESS ───────────────────────────────────────────────── -->
+<section class="access-wrap" id="request-access">
+  <div class="access-inner">
+    <div>
+      <p class="section-label reveal">Early access</p>
+      <h2 class="section-title reveal">Join the founding 20 households.</h2>
+      <p class="section-sub reveal" style="margin-bottom:32px;">We're accepting 20 founding households before a wider launch. Early access is free — and your feedback directly shapes the roadmap. We personally onboard every household.</p>
+      <div class="reveal reveal-d1">
+        <div class="access-step">
+          <div class="access-step-num">1</div>
+          <div>
+            <div class="access-step-title">Submit your request</div>
+            <p class="access-step-desc">Tell us about your household and what you're hoping to solve. Takes about two minutes.</p>
+          </div>
+        </div>
+        <div class="access-step">
+          <div class="access-step-num">2</div>
+          <div>
+            <div class="access-step-title">We reach out with an invite</div>
+            <p class="access-step-desc">We personally onboard every founding household and get you set up within a few days.</p>
+          </div>
+        </div>
+        <div class="access-step">
+          <div class="access-step-num">3</div>
+          <div>
+            <div class="access-step-title">Sign in and get started</div>
+            <p class="access-step-desc">Google sign-in, nothing to install. Works from any browser on any device.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel reveal reveal-d1">
+      <div class="form-panel-title">Request founding access</div>
+      <p class="form-panel-sub">20 spots · free for the beta · we'll be in touch within a few days.</p>
+
+      <div data-tally-src="https://tally.so/embed/pbJlKP"
+           data-tally-layout="inline"
+           data-tally-width="100%"
+           data-tally-hide-title="1"
+           data-tally-dynamic-height="1"
+           style="width:100%;"></div>
+      <script async src="https://tally.so/widgets/embed.js"></script>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ───────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo-mark">
+          <span class="footer-logo-hearth">Hearth</span>
+          <span class="footer-logo-amp">&amp;</span>
+          <span class="footer-logo-cents">Cents</span>
+        </div>
+        <div class="footer-tagline">Your family's financial home base.</div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <div class="footer-link-group-title">Product</div>
+          <ul class="footer-link-list">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-link-group-title">Account</div>
+          <ul class="footer-link-list">
+            <li><a href="https://app.hearthandcents.com/login">Sign in</a></li>
+            <li><a href="#request-access">Request access</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-link-group-title">Legal</div>
+          <ul class="footer-link-list">
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Hearth &amp; Cents. Made with care in Broomfield, CO.</span>
+      <a href="https://app.hearthandcents.com/login" class="btn-footer-login">Sign in to your household →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── HOW IT WORKS stepper ── */
+let currentStep = 0;
+function setStep(idx) {
+  document.querySelectorAll('.how-step').forEach((s,i) => s.classList.toggle('active', i === idx));
+  document.querySelectorAll('[id^="sv"]').forEach((v,i) => v.style.display = i === idx ? 'block' : 'none');
+  currentStep = idx;
+}
+// auto-rotate every 4.5s
+setInterval(() => setStep((currentStep + 1) % 4), 4500);
+
+/* ── scroll reveal ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
