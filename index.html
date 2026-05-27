@@ -359,6 +359,11 @@ h1 em {
   gap: 72px;
   align-items: start;
 }
+/* Reserve enough vertical space to hold four collapsed step rows plus
+   the active step's 120px expanded text. Pinning min-height here stops
+   the page below the section from jumping when the auto-rotate (every
+   4.5s) cross-fades the max-height of two .how-step-text paragraphs. */
+.how-steps { min-height: 440px; }
 .how-step {
   display: flex;
   gap: 20px;
@@ -940,7 +945,7 @@ footer {
     <div>
       <p class="section-label reveal">How it works</p>
       <h2 class="section-title reveal" style="margin-bottom:36px;">From bank email to dinner table in minutes.</h2>
-      <div>
+      <div class="how-steps">
         <div class="how-step active" onclick="setStep(0)">
           <span class="how-num">01</span>
           <div>
@@ -1153,8 +1158,18 @@ footer {
       <div class="form-panel-title">Request founding access</div>
       <p class="form-panel-sub">20 spots · free for the beta · we'll be in touch within a few days.</p>
 
-      <div data-tally-src="https://tally.so/embed/pbJlKP?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" data-tally-overlay="0" style="width:100%;"></div>
+      <div data-tally-src="https://tally.so/embed/pbJlKP?alignLeft=1&hideTitle=1&transparentBackground=1" data-tally-overlay="0" style="width:100%;min-height:500px;"></div>
       <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("[data-tally-src]:not([data-tally-loaded])").forEach((function(e){e.src=e.dataset.tallySrc,e.type="iframe",e.scrolling="no",delete e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+      <script>
+        /* Belt-and-suspenders: re-trigger Tally after window load in case
+           loadEmbeds() ran before the section was painted (e.g. when the
+           parent .reveal element still had opacity:0). */
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            if (typeof Tally !== 'undefined') Tally.loadEmbeds();
+          }, 500);
+        });
+      </script>
 
     </div>
   </div>
