@@ -1160,8 +1160,16 @@ footer {
       <div class="form-panel-title">Request founding access</div>
       <p class="form-panel-sub">20 spots · free for the beta · we'll be in touch within a few days.</p>
 
-      <div data-tally-src="https://tally.so/embed/pbJlKP?alignLeft=1&hideTitle=1&transparentBackground=1" data-tally-overlay="0" style="width:100%;min-height:500px;"></div>
-      <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("[data-tally-src]:not([data-tally-loaded])").forEach((function(e){e.src=e.dataset.tallySrc,e.type="iframe",e.scrolling="no",delete e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+      <iframe
+        src="https://tally.so/embed/pbJlKP?alignLeft=1&hideTitle=1&transparentBackground=1"
+        width="100%"
+        height="500"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="Request founding access"
+        style="border:none;"
+      ></iframe>
 
     </div>
   </div>
@@ -1215,6 +1223,11 @@ footer {
 /* ── HOW IT WORKS stepper ── */
 let currentStep = 0;
 function setStep(idx) {
+  // Lock the wrapper to its current rendered height before any class toggles
+  // or display swaps fire. Stops the simultaneous left-column (.how-step-text
+  // max-height transition) and right-column (#sv* display swap) reflows from
+  // propagating down the page during the 4.5s auto-rotate.
+  document.querySelector('.how-steps').style.minHeight = document.querySelector('.how-steps').offsetHeight + 'px';
   document.querySelectorAll('.how-step').forEach((s,i) => s.classList.toggle('active', i === idx));
   document.querySelectorAll('[id^="sv"]').forEach((v,i) => v.style.display = i === idx ? 'block' : 'none');
   currentStep = idx;
@@ -1222,20 +1235,9 @@ function setStep(idx) {
 // auto-rotate every 4.5s
 setInterval(() => setStep((currentStep + 1) % 4), 4500);
 
-/* ── scroll reveal ──
-   The Tally re-trigger here is intentional: Tally.loadEmbeds() runs at
-   page parse, but the form-panel starts at opacity:0 (.reveal). Tally
-   skips invisible elements, so we re-call loadEmbeds() the moment any
-   .reveal element fades in. Idempotent — Tally skips already-mounted
-   embeds via :not([data-tally-loaded]), so calling it for every reveal
-   element is cheap. */
+/* ── scroll reveal ── */
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      if (typeof Tally !== 'undefined') Tally.loadEmbeds();
-    }
-  });
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
