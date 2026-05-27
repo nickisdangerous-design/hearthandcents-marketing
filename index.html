@@ -360,10 +360,12 @@ h1 em {
   align-items: start;
 }
 /* Reserve enough vertical space to hold four collapsed step rows plus
-   the active step's 120px expanded text. Pinning min-height here stops
-   the page below the section from jumping when the auto-rotate (every
-   4.5s) cross-fades the max-height of two .how-step-text paragraphs. */
-.how-steps { min-height: 440px; }
+   the active step's 180px expanded text. Sized at 4 × ~82px collapsed
+   rows + 180px expanded + ~24px buffer = 520px. Step 2 (Shopping) has
+   the tallest content (~66px more than steps 0/1/3), and the older
+   120px cap clipped it which caused the page below to wobble during
+   the 4.5s auto-rotate cross-fade. */
+.how-steps { min-height: 520px; }
 .how-step {
   display: flex;
   gap: 20px;
@@ -395,7 +397,7 @@ h1 em {
   overflow: hidden;
   transition: max-height .38s ease;
 }
-.how-step.active .how-step-text { max-height: 120px; }
+.how-step.active .how-step-text { max-height: 180px; }
 
 .how-visual {
   background: var(--hc-linen);
@@ -1160,16 +1162,6 @@ footer {
 
       <div data-tally-src="https://tally.so/embed/pbJlKP?alignLeft=1&hideTitle=1&transparentBackground=1" data-tally-overlay="0" style="width:100%;min-height:500px;"></div>
       <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("[data-tally-src]:not([data-tally-loaded])").forEach((function(e){e.src=e.dataset.tallySrc,e.type="iframe",e.scrolling="no",delete e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
-      <script>
-        /* Belt-and-suspenders: re-trigger Tally after window load in case
-           loadEmbeds() ran before the section was painted (e.g. when the
-           parent .reveal element still had opacity:0). */
-        window.addEventListener('load', function() {
-          setTimeout(function() {
-            if (typeof Tally !== 'undefined') Tally.loadEmbeds();
-          }, 500);
-        });
-      </script>
 
     </div>
   </div>
@@ -1230,9 +1222,20 @@ function setStep(idx) {
 // auto-rotate every 4.5s
 setInterval(() => setStep((currentStep + 1) % 4), 4500);
 
-/* ── scroll reveal ── */
+/* ── scroll reveal ──
+   The Tally re-trigger here is intentional: Tally.loadEmbeds() runs at
+   page parse, but the form-panel starts at opacity:0 (.reveal). Tally
+   skips invisible elements, so we re-call loadEmbeds() the moment any
+   .reveal element fades in. Idempotent — Tally skips already-mounted
+   embeds via :not([data-tally-loaded]), so calling it for every reveal
+   element is cheap. */
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (typeof Tally !== 'undefined') Tally.loadEmbeds();
+    }
+  });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
